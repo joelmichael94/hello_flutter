@@ -16,7 +16,8 @@ class _RegisterState extends State<Register> {
   var _emailError = "";
   var _password = "";
   var _passwordError = "";
-  var _name = "Joe";
+  var _name = "";
+  var _nameError = "";
 
   _onPasswordChanged(value) {
     setState(() {
@@ -27,6 +28,12 @@ class _RegisterState extends State<Register> {
   _onEmailChanged(value) {
     setState(() {
       _email = value;
+    });
+  }
+
+  _onNameChanged(value) {
+    setState(() {
+      _name = value;
     });
   }
 
@@ -42,6 +49,12 @@ class _RegisterState extends State<Register> {
         _passwordError = "Password cannot be empty";
       } else {
         _passwordError = "";
+      }
+
+      if (_name.isEmpty) {
+        _nameError = "Name cannot be empty";
+      } else {
+        _nameError = "";
       }
 
       AuthService.createUser(
@@ -77,6 +90,16 @@ class _RegisterState extends State<Register> {
             style:
                 const TextStyle(fontWeight: FontWeight.w400, fontSize: 20.0)),
         Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Container(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              child: TextField(
+                onChanged: (value) => {_onNameChanged(value)},
+                decoration: InputDecoration(
+                    hintText: "Name",
+                    errorText: _nameError.isEmpty ? null : _nameError,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10))),
+              )),
           Container(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               child: TextField(
@@ -117,11 +140,6 @@ class _RegisterState extends State<Register> {
           ],
         ),
       ]),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => {},
-        backgroundColor: Colors.indigo,
-        child: const Icon(Icons.add),
-      ),
     );
   }
 }

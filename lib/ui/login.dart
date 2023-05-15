@@ -141,11 +141,6 @@ class _LoginState extends State<Login> {
           ],
         )
       ]),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => {},
-        backgroundColor: Colors.indigo,
-        child: const Icon(Icons.add),
-      ),
     );
   }
 }

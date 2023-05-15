@@ -58,7 +58,7 @@ class TaskDatabase {
 
   static Future<Database> createDb() async {
     return openDatabase(join(await getDatabasesPath(), "tasks_database.db"),
-        version: 2, onConfigure: (Database database) async {
+        version: 1, onConfigure: (Database database) async {
       await _onConfigure(database);
     },
         // onUpgrade: (Database db, int oldV, int newV) async {await _onUpgrade(db, oldV, newV);},
