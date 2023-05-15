@@ -7,8 +7,7 @@ import 'home_tabs/tab2.dart';
 import 'home_tabs/tab3.dart';
 
 class Home extends StatelessWidget {
-  final String name;
-  const Home({Key? key, required this.name}) : super(key: key);
+  const Home({Key? key}) : super(key: key);
 
   Widget _tabBarItem(String s, IconData icon) {
     return SizedBox(
@@ -22,7 +21,7 @@ class Home extends StatelessWidget {
 
   void _navigateToScene(BuildContext context) {
     Navigator.of(context).pop();
-    context.push("/scene");
+    context.push('/scene');
   }
 
   void _logout(BuildContext context) {
@@ -63,7 +62,7 @@ class Home extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 0.8,
             decoration: const BoxDecoration(color: Colors.white),
             child: ListView(padding: EdgeInsets.zero, children: [
-              DrawerHeaderProfile(name: name),
+              const DrawerHeaderProfile(),
               Expanded(
                   flex: 1,
                   child: Column(
@@ -98,15 +97,14 @@ class Home extends StatelessWidget {
 // }
 
 class DrawerHeaderProfile extends StatefulWidget {
-  final String name;
-  const DrawerHeaderProfile({super.key, required this.name});
+  const DrawerHeaderProfile({super.key});
 
   @override
   State<DrawerHeaderProfile> createState() => _DrawerHeaderProfileState();
 }
 
 class _DrawerHeaderProfileState extends State<DrawerHeaderProfile> {
-  late String _name;
+  var _name = "";
 
   @override
   void initState() {
@@ -115,9 +113,9 @@ class _DrawerHeaderProfileState extends State<DrawerHeaderProfile> {
   }
 
   void _fetchName() async {
-    String name = widget.name;
+    final user = await AuthService.getUser();
     setState(() {
-      _name = name;
+      if (user != null) _name = user.name;
     });
   }
 

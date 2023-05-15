@@ -57,9 +57,11 @@ class _RegisterState extends State<Register> {
         _nameError = "";
       }
 
-      AuthService.createUser(
-          User(name: _name, email: _email, password: _password));
-      context.go('/login');
+      if (_nameError == "" && _emailError == "" && _passwordError == "") {
+        AuthService.createUser(
+            User(name: _name, email: _email, password: _password));
+        context.go('/login');
+      }
     });
   }
 
@@ -82,16 +84,16 @@ class _RegisterState extends State<Register> {
       body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Icon(
           Icons.person,
-          size: 150,
+          size: 125,
           color: Colors.grey.shade500,
         ),
         Text("You entered $_email",
             textDirection: TextDirection.ltr,
             style:
                 const TextStyle(fontWeight: FontWeight.w400, fontSize: 20.0)),
-        Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Container(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
               child: TextField(
                 onChanged: (value) => {_onNameChanged(value)},
                 decoration: InputDecoration(
@@ -101,7 +103,7 @@ class _RegisterState extends State<Register> {
                         borderRadius: BorderRadius.circular(10))),
               )),
           Container(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
               child: TextField(
                 onChanged: (value) => {_onEmailChanged(value)},
                 decoration: InputDecoration(
@@ -111,7 +113,7 @@ class _RegisterState extends State<Register> {
                         borderRadius: BorderRadius.circular(10))),
               )),
           Container(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
               child: TextField(
                 obscureText: true,
                 onChanged: (value) => {_onPasswordChanged(value)},
@@ -123,7 +125,7 @@ class _RegisterState extends State<Register> {
               )),
         ]),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
                 onPressed: () => _onClickRegister(),
@@ -131,12 +133,12 @@ class _RegisterState extends State<Register> {
                     // minimumSize: const Size.fromHeight(50),
                     backgroundColor: Colors.indigo,
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 30, vertical: 18),
+                        horizontal: 30, vertical: 15),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15))),
                 // style: const ButtonStyle(
                 //     fixedSize: MaterialStatePropertyAll(Size.fromWidth(100))),
-                child: const Text("Login", style: TextStyle(fontSize: 16))),
+                child: const Text("Register", style: TextStyle(fontSize: 16))),
           ],
         ),
       ]),

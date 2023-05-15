@@ -2,8 +2,6 @@ import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
 import "package:hello_flutter/service/auth_service.dart";
 
-import "../data/model/user.dart";
-
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
 
@@ -16,7 +14,6 @@ class _LoginState extends State<Login> {
   var _emailError = "";
   var _password = "";
   var _passwordError = "";
-  var _name = "Joe";
 
   _onPasswordChanged(value) {
     setState(() {
@@ -44,19 +41,24 @@ class _LoginState extends State<Login> {
         _passwordError = "";
       }
 
-      AuthService.authenticate(
-          User(password: _password, name: _name, email: _email),
-          (status) => {
-                if (status)
-                  {context.go('/home/$_name')}
-                else
-                  {debugPrint("Wrong credentials")}
-              });
+      _login();
     });
   }
 
   _onClickRegister() {
-    context.push('/register');
+    context.go('/register');
+  }
+
+  _login() async {
+    await AuthService.authenticate(
+        _email,
+        _password,
+        (status) => {
+              if (status)
+                {context.go('/home')}
+              else
+                {debugPrint("Wrong credentials")}
+            });
   }
 
   @override
@@ -78,7 +80,7 @@ class _LoginState extends State<Login> {
       body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Icon(
           Icons.person,
-          size: 150,
+          size: 125,
           color: Colors.grey.shade500,
         ),
         Text("You entered $_email",
@@ -87,7 +89,7 @@ class _LoginState extends State<Login> {
                 const TextStyle(fontWeight: FontWeight.w400, fontSize: 20.0)),
         Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Container(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
               child: TextField(
                 onChanged: (value) => {_onEmailChanged(value)},
                 decoration: InputDecoration(
@@ -97,7 +99,7 @@ class _LoginState extends State<Login> {
                         borderRadius: BorderRadius.circular(10))),
               )),
           Container(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
               child: TextField(
                 obscureText: true,
                 onChanged: (value) => {_onPasswordChanged(value)},
@@ -108,6 +110,9 @@ class _LoginState extends State<Login> {
                         borderRadius: BorderRadius.circular(10))),
               )),
         ]),
+        const SizedBox(
+          height: 15,
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -117,7 +122,7 @@ class _LoginState extends State<Login> {
                     // minimumSize: const Size.fromHeight(50),
                     backgroundColor: Colors.indigo,
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 30, vertical: 18),
+                        horizontal: 30, vertical: 15),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15))),
                 // style: const ButtonStyle(
@@ -132,8 +137,13 @@ class _LoginState extends State<Login> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text("New user?"),
+            const SizedBox(width: 5),
             GestureDetector(
-              child: const Text("Register here"),
+              child: const Text(
+                "Register here",
+                style: TextStyle(
+                    color: Colors.indigo, fontWeight: FontWeight.w500),
+              ),
               onTap: () {
                 _onClickRegister();
               },

@@ -16,10 +16,7 @@ class MyApp extends StatelessWidget {
   final _routes = [
     GoRoute(path: "/login", builder: (context, state) => const Login()),
     GoRoute(
-        path: "/home/:name",
-        name: "home",
-        builder: (context, state) =>
-            Home(name: state.pathParameters['name'] ?? "")),
+        path: "/home", name: "home", builder: (context, state) => const Home()),
     GoRoute(
         path: "/register",
         name: "register",

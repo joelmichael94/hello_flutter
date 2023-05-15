@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hello_flutter/data/repository/task_repo_impl.dart';
+import 'package:hello_flutter/service/auth_service.dart';
 
 import '../../data/model/task.dart';
 
@@ -22,10 +23,13 @@ class _FirstTabState extends State<FirstTab> {
   }
 
   void refresh() async {
-    final res = await repo.getTasks();
-    setState(() {
-      _tasks = res;
-    });
+    final user = await AuthService.getUser();
+    if (user != null) {
+      final res = await repo.getTasksByUserId(user.id);
+      setState(() {
+        _tasks = res;
+      });
+    }
   }
 
   _toAddTask() async {
@@ -142,7 +146,7 @@ class _FirstTabState extends State<FirstTab> {
                                             fontSize: 18,
                                             fontWeight: FontWeight.w600)),
                                     const SizedBox(height: 5),
-                                    Text("Title: ${task.title}, id: ${task.id}",
+                                    Text("Title: ${task.title}",
                                         style: const TextStyle(
                                             color: Colors.black,
                                             fontSize: 18,

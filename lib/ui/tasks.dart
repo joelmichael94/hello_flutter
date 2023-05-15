@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hello_flutter/data/repository/task_repo_impl.dart';
+import 'package:hello_flutter/service/auth_service.dart';
+
 import '../data/model/task.dart';
 
 class Tasks extends StatefulWidget {
@@ -15,7 +17,6 @@ class _TaskState extends State<Tasks> {
   var _titleError = "";
   var _desc = "";
   var _descError = "";
-  var userId = 1;
   final repo = TaskRepoImpl();
 
   _onTitleChanged(value) {
@@ -45,16 +46,19 @@ class _TaskState extends State<Tasks> {
       }
 
       if (_titleError == "" && _descError == "") {
-        _onCreateTask(0, _title, _desc, userId);
+        _onCreateTask(0, _title, _desc);
         context.pop("true");
       }
     });
   }
 
-  _onCreateTask(priority, title, desc, userId) async {
-    var task =
-        Task(priority: priority, title: title, desc: desc, userId: userId);
-    await repo.createTask(task);
+  _onCreateTask(priority, title, desc) async {
+    final user = await AuthService.getUser();
+    if (user != null) {
+      final task =
+          Task(priority: priority, title: title, desc: desc, userId: user.id);
+      await repo.createTask(task);
+    }
   }
 
   _onClickBack() {

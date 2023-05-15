@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
 import "dart:convert";
+
 import "package:crypto/crypto.dart";
+import 'package:flutter/material.dart';
 
 @immutable
 class User {
@@ -40,6 +41,6 @@ class User {
         id: map["id"],
         name: map["name"],
         email: map["email"],
-        password: map["password"]);
+        password: map["password"] ?? "");
   }
 }

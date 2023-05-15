@@ -9,9 +9,7 @@ class AuthService {
   static SharedPreferences? sharedPref;
 
   static Future<SharedPreferences> createPref() async {
-    if (sharedPref != null) {
-      return sharedPref!;
-    }
+    if (sharedPref != null) return sharedPref!;
     sharedPref = await SharedPreferences.getInstance();
     return sharedPref!;
   }
@@ -25,19 +23,17 @@ class AuthService {
     await TaskDatabase.createUser(user);
   }
 
-  static Future authenticate(User user, Function(bool) callback) async {
-    final String hashedPassword =
-        md5.convert(utf8.encode(user.password)).toString();
-    final res = await TaskDatabase.getUserByEmail(user.email);
-    if (res.isEmpty) {
-      callback(false);
-    }
+  static Future authenticate(
+      String email, String password, Function(bool) callback) async {
+    final String hashedPassword = md5.convert(utf8.encode(password)).toString();
+    final res = await TaskDatabase.getUserByEmail(email);
+    if (res.isEmpty) callback(false);
     final User authUser = User.fromMap(res[0]);
-    if (authUser.password != hashedPassword) {
-      callback(false);
-    }
+    if (authUser.password != hashedPassword) callback(false);
     final sharedPref = await createPref();
-    final userString = jsonEncode(authUser.toMap());
+    final user = authUser.toMap();
+    user["id"] = authUser.id;
+    final userString = jsonEncode(user);
     sharedPref.setString("user", userString);
     callback(true);
   }
@@ -50,9 +46,7 @@ class AuthService {
   static Future<User?> getUser() async {
     final sharedPref = await createPref();
     final userString = sharedPref.getString("user");
-    if (userString != null) {
-      return User.fromMap(jsonDecode(userString));
-    }
+    if (userString != null) return User.fromMap(jsonDecode(userString));
     return null;
   }
 }

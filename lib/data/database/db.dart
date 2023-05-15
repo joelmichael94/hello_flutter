@@ -21,9 +21,9 @@ class TaskDatabase {
         title TEXT NOT NULL,
         desc TEXT NOT NULL,
         priority INTEGER NOT NULL DEFAULT 0,
-        createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         fk_user_id INTEGER NOT NULL DEFAULT 0,
-        FOREIGN KEY(fk_user_id) REFERENCES users(id)
+        createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY(fk_user_id) REFERENCES ${User.tableName}(id)
       )
     """);
   }
