@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "383193121704",
+    "firebase_url": "https://product-catalogue-joel-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "product-catalogue-joel",
+    "storage_bucket": "product-catalogue-joel.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:383193121704:android:cb864054834a53ead3539d",
+        "android_client_info": {
+          "package_name": "com.hello.flutter.hello_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "383193121704-tf0cfk65u1plver0rcrqk6ht7n729uj6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxl46hOzvKaOI8p-30TtssjTVLIlwulgo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "383193121704-tf0cfk65u1plver0rcrqk6ht7n729uj6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "383193121704-mv8hb43v1n0jbof0g4oma4m7kn00nd24.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hello.flutter.helloFlutter"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

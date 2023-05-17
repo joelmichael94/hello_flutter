@@ -34,9 +34,7 @@ class _FirstTabState extends State<FirstTab> {
 
   _toAddTask() async {
     var res = await context.push('/tasks');
-    if (res == "true") {
-      refresh();
-    }
+    if (res == "true") refresh();
   }
 
   void _deleteTask(int id) async {

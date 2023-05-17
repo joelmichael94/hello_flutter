@@ -1,3 +1,5 @@
+import "dart:typed_data";
+
 import "package:path/path.dart";
 import "package:sqflite/sqflite.dart";
 
@@ -32,6 +34,17 @@ class TaskDatabase {
     await db.execute("PRAGMA foreign_keys = ON");
   }
 
+  static Future _onUpgrade(Database db, int oldV, int newV) async {
+    if (oldV < 2) {
+      // await db.execute("""
+      //   ALTER TABLE ${User.tableName} ADD COLUMN image TEXT
+      // """);
+      await db.execute("""
+        ALTER TABLE ${User.tableName} ADD COLUMN image BLOB
+      """);
+    }
+  }
+
   // static Future _onUpgrade(Database db, int oldV, int newV) async {
   //   if (oldV < 2) {
   //     await db.execute("""
@@ -58,11 +71,11 @@ class TaskDatabase {
 
   static Future<Database> createDb() async {
     return openDatabase(join(await getDatabasesPath(), "tasks_database.db"),
-        version: 1, onConfigure: (Database database) async {
+        version: 2, onConfigure: (Database database) async {
       await _onConfigure(database);
-    },
-        // onUpgrade: (Database db, int oldV, int newV) async {await _onUpgrade(db, oldV, newV);},
-        onCreate: (Database database, int version) async {
+    }, onUpgrade: (Database db, int oldV, int newV) async {
+      await _onUpgrade(db, oldV, newV);
+    }, onCreate: (Database database, int version) async {
       await _createTables(database);
     });
   }
@@ -116,5 +129,11 @@ class TaskDatabase {
     final db = await createDb();
     return await db
         .query(Task.tableName, where: "fk_user_id = ?", whereArgs: [userId]);
+  }
+
+  static Future updateProfilePic(int userId, Uint8List image) async {
+    final db = await createDb();
+    await db.update(User.tableName, {"image": image},
+        where: "id = ?", whereArgs: [userId]);
   }
 }

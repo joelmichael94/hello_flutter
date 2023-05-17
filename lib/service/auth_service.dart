@@ -33,6 +33,7 @@ class AuthService {
     final sharedPref = await createPref();
     final user = authUser.toMap();
     user["id"] = authUser.id;
+    user["image"] = null;
     final userString = jsonEncode(user);
     sharedPref.setString("user", userString);
     callback(true);

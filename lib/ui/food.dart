@@ -80,9 +80,9 @@ class _FoodState extends State<Food> {
             ),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 30),
-              child: Column(
+              child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text("Beef Pizza", style: TextStyle(fontSize: 28)),
                   SizedBox(height: 20),
                   Text("Details",

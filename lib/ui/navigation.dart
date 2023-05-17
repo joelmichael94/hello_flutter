@@ -1,8 +1,10 @@
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
+import "package:hello_flutter/ui/add_product.dart";
 import "package:hello_flutter/ui/food.dart";
 import "package:hello_flutter/ui/home.dart";
 import "package:hello_flutter/ui/login.dart";
+import "package:hello_flutter/ui/profile.dart";
 import "package:hello_flutter/ui/register.dart";
 import "package:hello_flutter/ui/scene.dart";
 import "package:hello_flutter/ui/tasks.dart";
@@ -36,6 +38,14 @@ class MyApp extends StatelessWidget {
         name: "updateTask",
         builder: (context, state) =>
             UpdateTask(taskId: state.pathParameters["taskId"] ?? "")),
+    GoRoute(
+        path: "/profile",
+        name: "profile",
+        builder: (context, state) => const Profile()),
+    GoRoute(
+        path: "/addProduct",
+        name: "addProduct",
+        builder: (context, state) => const AddProduct()),
   ];
 
   // final _router = GoRouter(initialLocation: "/", routes: [

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:hello_flutter/data/database/db.dart';
 import 'package:hello_flutter/data/model/user.dart';
 
@@ -17,5 +19,9 @@ class UserRepoImpl {
       return null;
     }
     return User.fromMap(res[0]);
+  }
+
+  Future updateProfilePic(int userId, Uint8List image) async {
+    TaskDatabase.updateProfilePic(userId, image);
   }
 }

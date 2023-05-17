@@ -22,12 +22,12 @@ class Scene extends StatelessWidget {
           ),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 25),
-            child: Row(
+            child: const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text("Mount Fuji",
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.w600)),
@@ -40,7 +40,7 @@ class Scene extends StatelessWidget {
                   ],
                 ),
                 Row(
-                  children: const [
+                  children: [
                     Icon(Icons.star, color: Colors.red, size: 30),
                     SizedBox(width: 10),
                     Text("99", style: TextStyle(fontSize: 18))
@@ -50,11 +50,11 @@ class Scene extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Column(
-                children: const [
+                children: [
                   Icon(Icons.phone, color: Colors.indigoAccent, size: 30),
                   SizedBox(height: 10),
                   Text("CALL",
@@ -63,7 +63,7 @@ class Scene extends StatelessWidget {
                 ],
               ),
               Column(
-                children: const [
+                children: [
                   Icon(CupertinoIcons.location_fill,
                       color: Colors.indigoAccent, size: 30),
                   SizedBox(height: 10),
@@ -73,7 +73,7 @@ class Scene extends StatelessWidget {
                 ],
               ),
               Column(
-                children: const [
+                children: [
                   Icon(Icons.share, color: Colors.indigoAccent, size: 30),
                   SizedBox(height: 10),
                   Text("SHARE",

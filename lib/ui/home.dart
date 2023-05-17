@@ -1,6 +1,11 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hello_flutter/data/repository/user_repo_impl.dart';
 import 'package:hello_flutter/service/auth_service.dart';
+import 'package:hello_flutter/ui/home_tabs/tab4.dart';
 
 import 'home_tabs/tab1.dart';
 import 'home_tabs/tab2.dart';
@@ -33,7 +38,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 3,
+        length: 4,
         child: Scaffold(
           appBar: AppBar(
             title: const Text("Home"),
@@ -45,8 +50,8 @@ class Home extends StatelessWidget {
             //   Icon(Icons.person)
             // ]),
           ),
-          body:
-              const TabBarView(children: [FirstTab(), SecondTab(), ThirdTab()]),
+          body: const TabBarView(
+              children: [FirstTab(), SecondTab(), ThirdTab(), FourthTab()]),
           bottomNavigationBar: TabBar(
               padding: const EdgeInsets.symmetric(vertical: 10),
               indicatorPadding: const EdgeInsets.symmetric(vertical: -10),
@@ -56,7 +61,8 @@ class Home extends StatelessWidget {
               tabs: [
                 _tabBarItem("Home", Icons.home_filled),
                 _tabBarItem("Settings", Icons.settings),
-                _tabBarItem("Profile", Icons.person)
+                _tabBarItem("Profile", Icons.person),
+                _tabBarItem("Firebase", Icons.local_fire_department_outlined)
               ]),
           drawer: Container(
             width: MediaQuery.of(context).size.width * 0.8,
@@ -85,17 +91,6 @@ class Home extends StatelessWidget {
   }
 }
 
-// class CustomText extends StatelessWidget {
-//   const CustomText({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Text("Hello Flutter",
-//         textDirection: TextDirection.ltr,
-//         style: TextStyle(fontSize: 20.5, fontWeight: FontWeight.w500));
-//   }
-// }
-
 class DrawerHeaderProfile extends StatefulWidget {
   const DrawerHeaderProfile({super.key});
 
@@ -105,21 +100,38 @@ class DrawerHeaderProfile extends StatefulWidget {
 
 class _DrawerHeaderProfileState extends State<DrawerHeaderProfile> {
   var _name = "";
+  Uint8List? image;
+  String base64ImageString = "";
+  final repo = UserRepoImpl();
 
   @override
   void initState() {
     super.initState();
-    _fetchName();
+    _fetchUser();
   }
 
-  void _fetchName() async {
+  Uint8List getImageBytes() {
+    return base64Decode(base64ImageString);
+  }
+
+  void _fetchUser() async {
     final user = await AuthService.getUser();
-    setState(() {
-      if (user != null) _name = user.name;
-    });
+    if (user != null) {
+      final temp = await repo.getUserByEmail(user.email);
+      if (temp != null) {
+        setState(() {
+          _name = temp.name;
+          image = temp.image;
+          if (image != null) {
+            base64ImageString = base64Encode(image!);
+          }
+        });
+      }
+    }
   }
 
   void _navigateToProfile() {
+    Navigator.of(context).pop();
     context.push('/profile');
   }
 
@@ -132,17 +144,23 @@ class _DrawerHeaderProfileState extends State<DrawerHeaderProfile> {
           child: Column(
             children: [
               Text('Welcome $_name'),
-              Material(
-                child: Ink.image(
-                  image: const AssetImage('assets/images/cat.jpg'),
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.fill,
-                  child: InkWell(
-                    onLongPress: () => {_navigateToProfile()},
-                  ),
-                ),
-              ),
+              image != null
+                  ? Material(
+                      child: Ink.image(
+                        image: MemoryImage(image!),
+                        width: 75,
+                        height: 75,
+                        fit: BoxFit.fitHeight,
+                        child: InkWell(
+                          onLongPress: () => {_navigateToProfile()},
+                        ),
+                      ),
+                    )
+                  : Icon(
+                      Icons.person,
+                      size: 125,
+                      color: Colors.grey.shade500,
+                    ),
               const Text("Profile")
             ],
           ),

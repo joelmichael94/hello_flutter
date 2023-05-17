@@ -1,6 +1,11 @@
+import "dart:convert";
+import "dart:io";
+import "dart:typed_data";
+
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
 import "package:hello_flutter/service/auth_service.dart";
+import "package:image_picker/image_picker.dart";
 
 import "../data/model/user.dart";
 
@@ -18,6 +23,29 @@ class _RegisterState extends State<Register> {
   var _passwordError = "";
   var _name = "";
   var _nameError = "";
+  File? image;
+
+  // var base64ImageString;
+  Uint8List? _image;
+  String base64ImageString = "";
+
+  Uint8List getImageBytes() {
+    return base64Decode(base64ImageString);
+  }
+
+  Future _pickImage() async {
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      final imageFile = File(image.path);
+      final bytes = imageFile.readAsBytesSync();
+      final imageString = base64Encode(bytes);
+      setState(() {
+        this.image = imageFile;
+        base64ImageString = imageString;
+        _image = bytes;
+      });
+    }
+  }
 
   _onPasswordChanged(value) {
     setState(() {
@@ -58,11 +86,15 @@ class _RegisterState extends State<Register> {
       }
 
       if (_nameError == "" && _emailError == "" && _passwordError == "") {
-        AuthService.createUser(
-            User(name: _name, email: _email, password: _password));
+        AuthService.createUser(User(
+            name: _name, email: _email, password: _password, image: _image));
         context.go('/login');
       }
     });
+  }
+
+  _onClickLogin() {
+    context.go("/login");
   }
 
   @override
@@ -82,10 +114,18 @@ class _RegisterState extends State<Register> {
         ],
       ),
       body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Icon(
-          Icons.person,
-          size: 125,
-          color: Colors.grey.shade500,
+        Container(
+          child: _image != null
+              ? Image.memory(
+                  getImageBytes(),
+                  width: 125,
+                  height: 125,
+                )
+              : Icon(
+                  Icons.person,
+                  size: 125,
+                  color: Colors.grey.shade500,
+                ),
         ),
         Text("You entered $_email",
             textDirection: TextDirection.ltr,
@@ -123,7 +163,27 @@ class _RegisterState extends State<Register> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10))),
               )),
+          Container(
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+              child: ElevatedButton(
+                onPressed: () => {_pickImage()},
+                style: ElevatedButton.styleFrom(
+                    // minimumSize: const Size.fromHeight(50),
+                    backgroundColor: Colors.grey.shade400,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15))),
+                child: const Text(
+                  "Upload Profile Picture",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400),
+                ),
+              )),
         ]),
+        const SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -141,6 +201,24 @@ class _RegisterState extends State<Register> {
                 child: const Text("Register", style: TextStyle(fontSize: 16))),
           ],
         ),
+        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text("Already have an account?"),
+            const SizedBox(width: 5),
+            GestureDetector(
+              child: const Text(
+                "Login here",
+                style: TextStyle(
+                    color: Colors.indigo, fontWeight: FontWeight.w500),
+              ),
+              onTap: () {
+                _onClickLogin();
+              },
+            )
+          ],
+        )
       ]),
     );
   }
