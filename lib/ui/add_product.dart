@@ -135,15 +135,8 @@ class _AddProductState extends State<AddProduct> {
           _discountPercentageError == "" &&
           _ratingError == "" &&
           _stockError == "") {
-        _onCreateProduct(
-            _title,
-            _brand,
-            _category,
-            _description,
-            _price.toString(),
-            _discountPercentage.toString(),
-            _rating.toString(),
-            _stock);
+        _onCreateProduct(_title, _brand, _category, _description, _price,
+            _discountPercentage, _rating, _stock);
         context.pop("true");
       } else {
         debugPrint("Failed to add product");

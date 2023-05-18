@@ -29,6 +29,11 @@ class Home extends StatelessWidget {
     context.push('/scene');
   }
 
+  void _navigateToCounter(BuildContext context) {
+    Navigator.of(context).pop();
+    context.push('/counter');
+  }
+
   void _logout(BuildContext context) {
     AuthService.deauthenticate();
     Navigator.of(context).pop();
@@ -59,9 +64,9 @@ class Home extends StatelessWidget {
               labelColor: Colors.indigoAccent,
               unselectedLabelColor: Colors.grey,
               tabs: [
-                _tabBarItem("Home", Icons.home_filled),
-                _tabBarItem("Settings", Icons.settings),
-                _tabBarItem("Profile", Icons.person),
+                _tabBarItem("Tasks", Icons.calendar_month_outlined),
+                _tabBarItem("Products", Icons.card_giftcard_rounded),
+                _tabBarItem("Profile", Icons.person_outline_rounded),
                 _tabBarItem("Firebase", Icons.local_fire_department_outlined)
               ]),
           drawer: Container(
@@ -75,15 +80,20 @@ class Home extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ListTile(
-                            onTap: () => {_navigateToScene(context)},
+                            onTap: () => _navigateToScene(context),
                             title: const Text("Scene",
                                 style: TextStyle(
                                     color: Colors.indigo, fontSize: 18))),
                         ListTile(
-                            onTap: () => {_logout(context)},
+                            onTap: () => _navigateToCounter(context),
+                            title: const Text("Counter",
+                                style: TextStyle(
+                                    color: Colors.indigo, fontSize: 18))),
+                        ListTile(
+                            onTap: () => _logout(context),
                             title: const Text("Logout",
                                 style: TextStyle(
-                                    color: Colors.indigo, fontSize: 18)))
+                                    color: Colors.indigo, fontSize: 18))),
                       ]))
             ]),
           ),

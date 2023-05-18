@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
+import "package:hello_flutter/provider/counter_provider.dart";
 import "package:hello_flutter/ui/add_product.dart";
+import "package:hello_flutter/ui/counter.dart";
 import "package:hello_flutter/ui/food.dart";
 import "package:hello_flutter/ui/home.dart";
 import "package:hello_flutter/ui/login.dart";
@@ -52,6 +54,10 @@ class MyApp extends StatelessWidget {
         name: "updateProduct",
         builder: (context, state) =>
             UpdateProduct(productId: state.pathParameters["productId"] ?? "")),
+    GoRoute(
+        path: "/counter",
+        name: "counter",
+        builder: (context, state) => const Counter()),
   ];
 
   // final _router = GoRouter(initialLocation: "/", routes: [

@@ -98,17 +98,18 @@ class _LoginState extends State<Login> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10))),
               )),
-          Container(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-              child: TextField(
-                obscureText: true,
-                onChanged: (value) => {_onPasswordChanged(value)},
-                decoration: InputDecoration(
-                    hintText: "Password",
-                    errorText: _passwordError.isEmpty ? null : _passwordError,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10))),
-              )),
+          PasswordField(passwordError: _passwordError, onPasswordChanged: _onPasswordChanged),
+          // Container(
+          //     padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+          //     child: TextField(
+          //       obscureText: true,
+          //       onChanged: (value) => {_onPasswordChanged(value)},
+          //       decoration: InputDecoration(
+          //           hintText: "Password",
+          //           errorText: _passwordError.isEmpty ? null : _passwordError,
+          //           border: OutlineInputBorder(
+          //               borderRadius: BorderRadius.circular(10))),
+          //     )),
         ]),
         const SizedBox(
           height: 15,
@@ -152,5 +153,26 @@ class _LoginState extends State<Login> {
         )
       ]),
     );
+  }
+}
+
+class PasswordField extends StatelessWidget {
+  final Function onPasswordChanged;
+  final String passwordError;
+  const PasswordField({Key? key, required this.passwordError, required this.onPasswordChanged}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+        child: TextField(
+          obscureText: true,
+          onChanged: (value) => {onPasswordChanged(value)},
+          decoration: InputDecoration(
+              hintText: "Password",
+              errorText: passwordError.isEmpty ? null : passwordError,
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10))),
+        ));
   }
 }
