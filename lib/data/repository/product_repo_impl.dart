@@ -44,7 +44,7 @@ class ProductRepoImpl {
     }
   }
 
-  Future<int> updateItem(int id, Product product) async {
+  Future<int> updateItem(String id, Product product) async {
     final res = await http.put(
         Uri.parse("https://product-catalogue-hz5q.onrender.com/products/$id"),
         headers: {"Content-Type": "application/json; charset=UTF-8"},
@@ -57,7 +57,7 @@ class ProductRepoImpl {
     }
   }
 
-  Future<Product>? getItemById(int id) async {
+  Future<Product>? getItemById(String id) async {
     final res = await http.get(
         Uri.parse("https://product-catalogue-hz5q.onrender.com/products/$id"));
 

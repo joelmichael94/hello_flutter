@@ -9,6 +9,7 @@ import "package:hello_flutter/ui/register.dart";
 import "package:hello_flutter/ui/scene.dart";
 import "package:hello_flutter/ui/tasks.dart";
 import "package:hello_flutter/ui/updateTask.dart";
+import "package:hello_flutter/ui/update_product.dart";
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key, required this.initialRoute}) : super(key: key);
@@ -46,6 +47,11 @@ class MyApp extends StatelessWidget {
         path: "/addProduct",
         name: "addProduct",
         builder: (context, state) => const AddProduct()),
+    GoRoute(
+        path: "/updateProduct/:productId",
+        name: "updateProduct",
+        builder: (context, state) =>
+            UpdateProduct(productId: state.pathParameters["productId"] ?? "")),
   ];
 
   // final _router = GoRouter(initialLocation: "/", routes: [

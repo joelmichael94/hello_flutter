@@ -3,23 +3,26 @@ import 'package:go_router/go_router.dart';
 import 'package:hello_flutter/data/model/product.dart';
 import 'package:hello_flutter/data/repository/product_repo_impl.dart';
 
-class AddProduct extends StatefulWidget {
-  const AddProduct({Key? key}) : super(key: key);
+class UpdateProduct extends StatefulWidget {
+  final String productId;
+
+  const UpdateProduct({Key? key, required this.productId}) : super(key: key);
 
   @override
-  State<AddProduct> createState() => _AddProductState();
+  State<UpdateProduct> createState() => _UpdateProductState();
 }
 
-class _AddProductState extends State<AddProduct> {
+class _UpdateProductState extends State<UpdateProduct> {
   final repo = ProductRepoImpl();
-  var _title = "";
-  var _brand = "";
-  var _category = "";
-  var _description = "";
-  double _price = 0.0;
-  double _discountPercentage = 0.0;
-  double _rating = 0.0;
-  int _stock = 0;
+  final _title = TextEditingController();
+  final _brand = TextEditingController();
+  final _category = TextEditingController();
+  final _description = TextEditingController();
+  final _price = TextEditingController();
+  final _discountPercentage = TextEditingController();
+  final _rating = TextEditingController();
+  final _stock = TextEditingController();
+  final _thumbnail = "";
   var _titleError = "";
   var _brandError = "";
   var _categoryError = "";
@@ -28,100 +31,148 @@ class _AddProductState extends State<AddProduct> {
   var _discountPercentageError = "";
   var _ratingError = "";
   var _stockError = "";
+  late String productId;
+
+  @override
+  void initState() {
+    super.initState();
+    refresh();
+  }
+
+  @override
+  void dispose() {
+    _title.dispose();
+    _brand.dispose();
+    _category.dispose();
+    _description.dispose();
+    _price.dispose();
+    _discountPercentage.dispose();
+    _rating.dispose();
+    _stock.dispose();
+    super.dispose();
+  }
+
+  void refresh() async {
+    productId = widget.productId;
+    final res = await repo.getItemById(productId);
+    setState(() {
+      if (res != null) {
+        _title.text = res.title;
+        _brand.text = res.brand;
+        _category.text = res.category;
+        _description.text = res.description;
+        _price.text = res.price.toString();
+        _discountPercentage.text = res.discountPercentage.toString();
+        _rating.text = res.rating.toString();
+        _stock.text = res.stock.toString();
+      }
+    });
+  }
 
   _onTitleChanged(value) {
     setState(() {
-      _title = value;
+      _title.text = value;
+      _title.selection = TextSelection.collapsed(offset: _title.text.length);
     });
   }
 
   _onBrandChanged(value) {
     setState(() {
-      _brand = value;
+      _brand.text = value;
+      _brand.selection = TextSelection.collapsed(offset: _brand.text.length);
     });
   }
 
   _onCategoryChanged(value) {
     setState(() {
-      _category = value;
+      _category.text = value;
+      _category.selection =
+          TextSelection.collapsed(offset: _category.text.length);
     });
   }
 
   _onDescriptionChanged(value) {
     setState(() {
-      _description = value;
+      _description.text = value;
+      _description.selection =
+          TextSelection.collapsed(offset: _description.text.length);
     });
   }
 
   _onPriceChanged(value) {
     setState(() {
-      _price = double.tryParse(value) ?? 0.0;
+      _price.text = value;
+      _price.selection = TextSelection.collapsed(offset: _price.text.length);
     });
   }
 
   _onDiscountChanged(value) {
     setState(() {
-      _discountPercentage = double.tryParse(value) ?? 0.0;
+      _discountPercentage.text = value;
+      _discountPercentage.selection =
+          TextSelection.collapsed(offset: _discountPercentage.text.length);
     });
   }
 
   _onRatingChanged(value) {
     setState(() {
-      _rating = double.tryParse(value) ?? 0.0;
+      _rating.text = value;
+      _rating.selection = TextSelection.collapsed(offset: _rating.text.length);
     });
   }
 
   _onStockChanged(value) {
     setState(() {
-      _stock = int.tryParse(value) ?? 0;
+      _stock.text = value;
+      _stock.selection = TextSelection.collapsed(offset: _stock.text.length);
     });
   }
 
-  _onClickAdd() {
+  _onClickUpdate() {
     setState(() {
-      if (_title.isEmpty) {
+      if (_title.text.isEmpty) {
         _titleError = "Title cannot be empty";
       } else {
         _titleError = "";
       }
 
-      if (_brand.isEmpty) {
+      if (_brand.text.isEmpty) {
         _brandError = "Brand cannot be empty";
       } else {
         _brandError = "";
       }
 
-      if (_category.isEmpty) {
+      if (_category.text.isEmpty) {
         _categoryError = "Category cannot be empty";
       } else {
         _categoryError = "";
       }
 
-      if (_description.isEmpty) {
+      if (_description.text.isEmpty) {
         _descriptionError = "Description cannot be empty";
       } else {
         _descriptionError = "";
       }
 
-      if (_price.isNaN) {
+      if (_price.text.isEmpty) {
         _priceError = "Price cannot be 0";
       } else {
         _priceError = "";
       }
 
-      if (_discountPercentage.isNegative) {
+      if (_discountPercentage.text.isEmpty) {
         _discountPercentageError = "Discount Percentage cannot be negative";
       } else {
         _discountPercentageError = "";
       }
 
-      if (_rating.isNegative) {
+      if (_rating.text.isEmpty) {
         _ratingError = "Rating cannot be 0";
       } else {
         _ratingError = "";
       }
 
-      if (_stock.isNaN) {
+      if (_stock.text.isEmpty) {
         _stockError = "Stock cannot be 0";
       } else {
         _stockError = "";
@@ -135,15 +186,15 @@ class _AddProductState extends State<AddProduct> {
           _discountPercentageError == "" &&
           _ratingError == "" &&
           _stockError == "") {
-        _onCreateProduct(
-            _title,
-            _brand,
-            _category,
-            _description,
-            _price.toString(),
-            _discountPercentage.toString(),
-            _rating.toString(),
-            _stock);
+        _onUpdateProduct(
+            _title.text,
+            _brand.text,
+            _category.text,
+            _description.text,
+            double.tryParse(_price.text),
+            double.tryParse(_discountPercentage.text),
+            double.tryParse(_rating.text),
+            int.tryParse(_stock.text));
         context.pop("true");
       } else {
         debugPrint("Failed to add product");
@@ -151,9 +202,12 @@ class _AddProductState extends State<AddProduct> {
     });
   }
 
-  _onCreateProduct(title, brand, category, description, price,
+  // double.tryParse()
+
+  _onUpdateProduct(title, brand, category, description, price,
       discountPercentage, rating, stock) async {
     final product = Product(
+        id: productId,
         title: title,
         brand: brand,
         category: category,
@@ -162,16 +216,15 @@ class _AddProductState extends State<AddProduct> {
         discountPercentage: discountPercentage,
         rating: rating,
         stock: stock,
-        thumbnail: "");
-    debugPrint(product.toString());
-    await repo.insertItem(product);
+        thumbnail: _thumbnail);
+    await repo.updateItem(productId, product);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add Product"),
+        title: const Text("Update Product"),
         backgroundColor: Colors.indigo,
       ),
       body: Column(
@@ -186,6 +239,7 @@ class _AddProductState extends State<AddProduct> {
                       padding: const EdgeInsets.symmetric(
                           vertical: 10, horizontal: 20),
                       child: TextField(
+                        controller: _title,
                         onChanged: (value) => _onTitleChanged(value),
                         decoration: InputDecoration(
                             suffixIcon: const Icon(Icons.abc_sharp),
@@ -201,6 +255,7 @@ class _AddProductState extends State<AddProduct> {
                       padding: const EdgeInsets.symmetric(
                           vertical: 10, horizontal: 20),
                       child: TextField(
+                        controller: _brand,
                         onChanged: (value) => _onBrandChanged(value),
                         decoration: InputDecoration(
                             suffixIcon: const Icon(Icons.abc_sharp),
@@ -216,6 +271,7 @@ class _AddProductState extends State<AddProduct> {
                       padding: const EdgeInsets.symmetric(
                           vertical: 10, horizontal: 20),
                       child: TextField(
+                        controller: _category,
                         onChanged: (value) => _onCategoryChanged(value),
                         decoration: InputDecoration(
                             suffixIcon: const Icon(Icons.abc_sharp),
@@ -232,6 +288,7 @@ class _AddProductState extends State<AddProduct> {
                       padding: const EdgeInsets.symmetric(
                           vertical: 10, horizontal: 20),
                       child: TextField(
+                        controller: _description,
                         onChanged: (value) => _onDescriptionChanged(value),
                         decoration: InputDecoration(
                             suffixIcon: const Icon(Icons.abc_sharp),
@@ -249,9 +306,10 @@ class _AddProductState extends State<AddProduct> {
                       padding: const EdgeInsets.symmetric(
                           vertical: 10, horizontal: 20),
                       child: TextField(
+                        controller: _price,
                         onChanged: (value) => _onPriceChanged(value),
                         decoration: InputDecoration(
-                            suffixIcon: const Icon(Icons.abc_sharp),
+                            suffixIcon: const Icon(Icons.onetwothree),
                             hintText: "Price",
                             errorText: _priceError.isEmpty ? null : _priceError,
                             border: OutlineInputBorder(
@@ -264,9 +322,10 @@ class _AddProductState extends State<AddProduct> {
                       padding: const EdgeInsets.symmetric(
                           vertical: 10, horizontal: 20),
                       child: TextField(
+                        controller: _discountPercentage,
                         onChanged: (value) => _onDiscountChanged(value),
                         decoration: InputDecoration(
-                            suffixIcon: const Icon(Icons.abc_sharp),
+                            suffixIcon: const Icon(Icons.onetwothree),
                             hintText: "Discount Percentage",
                             errorText: _discountPercentageError.isEmpty
                                 ? null
@@ -281,9 +340,10 @@ class _AddProductState extends State<AddProduct> {
                       padding: const EdgeInsets.symmetric(
                           vertical: 10, horizontal: 20),
                       child: TextField(
+                        controller: _rating,
                         onChanged: (value) => _onRatingChanged(value),
                         decoration: InputDecoration(
-                            suffixIcon: const Icon(Icons.abc_sharp),
+                            suffixIcon: const Icon(Icons.onetwothree),
                             hintText: "Rating",
                             errorText:
                                 _ratingError.isEmpty ? null : _ratingError,
@@ -297,9 +357,10 @@ class _AddProductState extends State<AddProduct> {
                       padding: const EdgeInsets.symmetric(
                           vertical: 10, horizontal: 20),
                       child: TextField(
+                        controller: _stock,
                         onChanged: (value) => _onStockChanged(value),
                         decoration: InputDecoration(
-                            suffixIcon: const Icon(Icons.abc_sharp),
+                            suffixIcon: const Icon(Icons.onetwothree),
                             hintText: "Stock",
                             errorText: _stockError.isEmpty ? null : _stockError,
                             border: OutlineInputBorder(
@@ -316,14 +377,14 @@ class _AddProductState extends State<AddProduct> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButton(
-                  onPressed: () => _onClickAdd(),
+                  onPressed: () => _onClickUpdate(),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.indigo,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 50, vertical: 18),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15))),
-                  child: const Text("Add", style: TextStyle(fontSize: 16))),
+                  child: const Text("Update", style: TextStyle(fontSize: 16))),
             ],
           )
         ],

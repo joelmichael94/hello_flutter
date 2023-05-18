@@ -31,7 +31,12 @@ class _SecondTabState extends State<SecondTab> {
   }
 
   _toAddProduct() async {
-    var res = await context.push("/addProduct");
+    final res = await context.push("/addProduct");
+    if (res == "true") refresh();
+  }
+
+  _toUpdateProduct(String productId) async {
+    final res = await context.push("/updateProduct/$productId");
     if (res == "true") refresh();
   }
 
@@ -80,6 +85,7 @@ class _SecondTabState extends State<SecondTab> {
                   color: Colors.indigo,
                   width: double.infinity,
                   child: ListView.builder(
+                      padding: const EdgeInsets.only(bottom: 80),
                       itemCount: _products.length,
                       itemBuilder: (context, index) {
                         final product = _products[index];
@@ -132,7 +138,8 @@ class _SecondTabState extends State<SecondTab> {
                                             MainAxisAlignment.end,
                                         children: [
                                           GestureDetector(
-                                            onTap: () => {},
+                                            onTap: () => _toUpdateProduct(
+                                                product.id.toString()),
                                             child: Icon(Icons.draw_outlined,
                                                 color: Colors.yellow.shade700),
                                           )
