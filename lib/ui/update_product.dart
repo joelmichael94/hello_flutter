@@ -11,7 +11,9 @@ class UpdateProduct extends StatefulWidget {
   @override
   State<UpdateProduct> createState() => _UpdateProductState();
 }
-
+/*
+TextEditingController does not need an onChange function, you can directly assign the variable, and extract the value from that variable's .text property.
+ */
 class _UpdateProductState extends State<UpdateProduct> {
   final repo = ProductRepoImpl();
   final _title = TextEditingController();
@@ -201,8 +203,6 @@ class _UpdateProductState extends State<UpdateProduct> {
       }
     });
   }
-
-  // double.tryParse()
 
   _onUpdateProduct(title, brand, category, description, price,
       discountPercentage, rating, stock) async {

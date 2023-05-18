@@ -1,12 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:hello_flutter/provider/products_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 
-class SecondTab extends StatelessWidget {
+import '../../data/model/product.dart';
+import '../../data/repository/product_repo_impl.dart';
+
+class SecondTab extends StatefulWidget {
   const SecondTab({Key? key}) : super(key: key);
 
-  Future<bool> _onConfirmDismiss(
-      DismissDirection dir, BuildContext context) async {
+  @override
+  State<SecondTab> createState() => _SecondTabState();
+}
+
+class _SecondTabState extends State<SecondTab> {
+  var _products = <Product>[];
+  final repo = ProductRepoImpl();
+
+  @override
+  void initState() {
+    super.initState();
+    refresh();
+  }
+
+  void refresh() async {
+    final products = await repo.getProducts();
+    if (products.isNotEmpty) {
+      setState(() {
+        _products = products;
+      });
+    }
+  }
+
+  _toAddProduct() async {
+    final res = await context.push("/addProduct");
+    if (res == "true") refresh();
+  }
+
+  _toUpdateProduct(String productId) async {
+    final res = await context.push("/updateProduct/$productId");
+    if (res == "true") refresh();
+  }
+
+  void _deleteProduct(String id) async {
+    await repo.deleteItem(id);
+    refresh();
+  }
+
+  Future<bool> _onConfirmDismiss(DismissDirection dir) async {
     if (dir == DismissDirection.endToStart) {
       return await showDialog(
           barrierDismissible: false,
@@ -38,7 +77,6 @@ class SecondTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final products = context.watch<ProductsProvider>().products;
     return Scaffold(
       body: Column(
         children: [
@@ -48,25 +86,22 @@ class SecondTab extends StatelessWidget {
                   width: double.infinity,
                   child: ListView.builder(
                       padding: const EdgeInsets.only(bottom: 80),
-                      itemCount: products.length,
+                      itemCount: _products.length,
                       itemBuilder: (context, index) {
-                        final product = products[index];
+                        final product = _products[index];
                         return Card(
                           color: Colors.blue.shade50,
                           margin: const EdgeInsets.all(8),
                           child: Dismissible(
-                            // key: Key(product.toString()),
-                            key: UniqueKey(),
+                            key: Key(product.id.toString()),
                             onDismissed: (dir) {
-                              Provider.of<ProductsProvider>(context,
-                                      listen: false)
-                                  .deleteProduct(product.id.toString());
+                              _deleteProduct(product.id.toString());
                             },
                             secondaryBackground: Container(
                                 color: Colors.green,
                                 child: const Center(child: Text("Delete"))),
                             confirmDismiss: (dir) async {
-                              return _onConfirmDismiss(dir, context);
+                              return _onConfirmDismiss(dir);
                             },
                             background: Container(
                               color: Colors.red.shade600,
@@ -103,13 +138,8 @@ class SecondTab extends StatelessWidget {
                                             MainAxisAlignment.end,
                                         children: [
                                           GestureDetector(
-                                            onTap: () =>
-                                                Provider.of<ProductsProvider>(
-                                                        context,
-                                                        listen: false)
-                                                    .toUpdateProduct(
-                                                        product.id.toString(),
-                                                        context),
+                                            onTap: () => _toUpdateProduct(
+                                                product.id.toString()),
                                             child: Icon(Icons.draw_outlined,
                                                 color: Colors.yellow.shade700),
                                           )
@@ -122,9 +152,7 @@ class SecondTab extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-          onPressed: () => Provider.of<ProductsProvider>(context, listen: false)
-              .toAddProduct(context),
-          child: const Icon(Icons.add)),
+          onPressed: () => _toAddProduct(), child: const Icon(Icons.add)),
     );
   }
 }

@@ -74,27 +74,20 @@ class Home extends StatelessWidget {
             decoration: const BoxDecoration(color: Colors.white),
             child: ListView(padding: EdgeInsets.zero, children: [
               const DrawerHeaderProfile(),
-              Expanded(
-                  flex: 1,
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ListTile(
-                            onTap: () => _navigateToScene(context),
-                            title: const Text("Scene",
-                                style: TextStyle(
-                                    color: Colors.indigo, fontSize: 18))),
-                        ListTile(
-                            onTap: () => _navigateToCounter(context),
-                            title: const Text("Counter",
-                                style: TextStyle(
-                                    color: Colors.indigo, fontSize: 18))),
-                        ListTile(
-                            onTap: () => _logout(context),
-                            title: const Text("Logout",
-                                style: TextStyle(
-                                    color: Colors.indigo, fontSize: 18))),
-                      ]))
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                ListTile(
+                    onTap: () => _navigateToScene(context),
+                    title: const Text("Scene",
+                        style: TextStyle(color: Colors.indigo, fontSize: 18))),
+                ListTile(
+                    onTap: () => _navigateToCounter(context),
+                    title: const Text("Counter",
+                        style: TextStyle(color: Colors.indigo, fontSize: 18))),
+                ListTile(
+                    onTap: () => _logout(context),
+                    title: const Text("Logout",
+                        style: TextStyle(color: Colors.indigo, fontSize: 18))),
+              ])
             ]),
           ),
         ));
@@ -149,31 +142,28 @@ class _DrawerHeaderProfileState extends State<DrawerHeaderProfile> {
   Widget build(BuildContext context) {
     return DrawerHeader(
         decoration: BoxDecoration(color: Colors.blue.shade200),
-        child: Expanded(
-          flex: 1,
-          child: Column(
-            children: [
-              Text('Welcome $_name'),
-              image != null
-                  ? Material(
-                      child: Ink.image(
-                        image: MemoryImage(image!),
-                        width: 75,
-                        height: 75,
-                        fit: BoxFit.fitHeight,
-                        child: InkWell(
-                          onLongPress: () => {_navigateToProfile()},
-                        ),
+        child: Column(
+          children: [
+            Text('Welcome $_name'),
+            image != null
+                ? Material(
+                    child: Ink.image(
+                      image: MemoryImage(image!),
+                      width: 75,
+                      height: 75,
+                      fit: BoxFit.fitHeight,
+                      child: InkWell(
+                        onLongPress: () => {_navigateToProfile()},
                       ),
-                    )
-                  : Icon(
-                      Icons.person,
-                      size: 125,
-                      color: Colors.grey.shade500,
                     ),
-              const Text("Profile")
-            ],
-          ),
+                  )
+                : Icon(
+                    Icons.person,
+                    size: 125,
+                    color: Colors.grey.shade500,
+                  ),
+            const Text("Profile")
+          ],
         ));
   }
 }

@@ -10,10 +10,8 @@ class ProductRepoImpl {
 
     if (res.statusCode == 200) {
       final List<dynamic> resBody = jsonDecode(res.body);
-      final List<Product> products = resBody
-          .map((product) => Product.fromMap(product))
-          .toList()
-          .cast<Product>();
+      final List<Product> products = resBody.map((product) =>
+          Product.fromMap(product)).toList().cast<Product>();
       return products;
     } else {
       throw Exception("Failed to load");
